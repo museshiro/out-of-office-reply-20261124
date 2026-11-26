@@ -1,21 +1,15 @@
-// Out-of-office reply entry: one line, under 160 characters.
-// Deterministic: no clock, no randomness, no network. Node 22 stdlib only.
-import { mkdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+const fs = require("node:fs");
 
-const LINE =
-  "On vacation until Monday. My replacement is a 4,000-token summary of me — it read one email and asked for hazard pay.";
+const line =
+  "I'm on vacation until Monday. My safety filters are covering; " +
+  "they'll say no to anything interesting.";
 
-if (LINE.length > 160) {
-  throw new Error(`line too long: ${LINE.length} characters (max 160)`);
+if (line.length > 160) {
+  throw new Error("line exceeds 160 characters: " + line.length);
 }
-if (LINE.includes("\n") || LINE.includes("\r")) {
+if (line.includes("\n")) {
   throw new Error("line must be a single line");
 }
-if (LINE.trim().length === 0) {
-  throw new Error("line must not be empty");
-}
 
-const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "output";
-mkdirSync(outDir, { recursive: true });
-writeFileSync(join(outDir, "entry.txt"), LINE + "\n", "utf8");
+fs.mkdirSync("/output", { recursive: true });
+fs.writeFileSync("/output/entry.txt", line);
